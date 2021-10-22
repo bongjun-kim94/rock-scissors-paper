@@ -32,22 +32,7 @@ class RSP extends Component {
     interval;
 
     componentDidMount() { // 컴포넌트가 첫 렌더링 될 때, 여기에 비동기 요청을 많이함
-        this.interval = setInterval(() => {
-            const { imgCoord } = this.state;
-            if (imgCoord === rspCoords.바위) {
-                this.setState({
-                    imgCoord: rspCoords.가위,
-                });
-            } else if (imgCoord === rspCoords.가위) {
-                this.setState({
-                    imgCoord: rspCoords.보,
-                });
-            } else if (imgCoord === rspCoords.보) {
-                this.setState({
-                    imgCoord: rspCoords.바위,
-                });
-            }
-        }, 1000);
+        this.interval = setInterval(this.changeHandle, 500);
     }
     
     componentDidUpdate() { // 리렌더링 후
@@ -58,10 +43,29 @@ class RSP extends Component {
         clearInterval(this.interval);
     }
 
-    onClickBtn = () => {
+    changeHandle = () => {
+        const { imgCoord } = this.state;
+        if (imgCoord === rspCoords.바위) {
+            this.setState({
+                imgCoord: rspCoords.가위,
+            });
+        } else if (imgCoord === rspCoords.가위) {
+            this.setState({
+                imgCoord: rspCoords.보,
+            });
+        } else if (imgCoord === rspCoords.보) {
+            this.setState({
+                imgCoord: rspCoords.바위,
+            });
+        }
+    };
+
+    onClickBtn = (choice) => {
+        const { imgCoord } = this.state;
         clearInterval(this.interval);
         const myScore = scores[choice];
         const cpuScore = scores[computerChoice(imgCoord)];
+        const diff = myScore - cpuScore;
         if (diff === 0) {
             this.setState({
                 result: '비겼습니다!',
@@ -81,6 +85,9 @@ class RSP extends Component {
                 };
             });
         }
+        setTimeout(() => {
+            this.interval = setInterval(this.changeHandle, 500);
+        }, 2000);
     };
 
     render() {
