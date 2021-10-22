@@ -14,7 +14,13 @@ const scores = {
     가위: 1,
     바위: 0,
     보: -1,
-}
+};
+
+const computerChoice = (imgCoord) => {
+    return Object.entries(rspCoords).find(function (v) {
+        return v[1] === imgCoord;
+    })[0];
+};
 
 class RSP extends Component {
     state = {
@@ -53,8 +59,29 @@ class RSP extends Component {
     }
 
     onClickBtn = () => {
-        
-    }
+        clearInterval(this.interval);
+        const myScore = scores[choice];
+        const cpuScore = scores[computerChoice(imgCoord)];
+        if (diff === 0) {
+            this.setState({
+                result: '비겼습니다!',
+            });
+        } else if ([-1, 2].includes(diff)) {
+            this.setState((prevState) => {
+                return {
+                    result: '이겼습니다!',
+                    score: prevState.score + 1,
+                };
+            });
+        } else {
+            this.setState((prevState) => {
+                return {
+                    result: '졌습니다!',
+                    score: prevState.score - 1,
+                };
+            });
+        }
+    };
 
     render() {
         const { result, score, imgCoord } = this.state;
