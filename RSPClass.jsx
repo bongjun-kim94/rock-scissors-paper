@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { Component } from 'react';
 
 // 클래시의 경우 -> constructor  -> render -> ref -> componentDidMount
 // -> (setState/props 바뀔 때 -> shouldComponentUpdate -> render -> componentDidUpdate)
@@ -21,23 +21,6 @@ const computerChoice = (imgCoord) => {
         return v[1] === imgCoord;
     })[0];
 };
-
-const RSP = () => {
-    const [result, setResult] = useState('');
-    const [imgCoord, setImgCoord] = useState(rspCoords.바위);
-    const [score, setScore] = useState(0);
-    const interval = useRef();
-
-    const changeHandle = () => {
-        if (imgCoord === rspCoords.바위) {
-            setImgCoord(rspCoords.가위)
-        } else if (imgCoord === rspCoords.가위) {
-            setImgCoord(rspCoords.보)
-        } else if (imgCoord === rspCoords.보) {
-            setImgCoord(rspCoords.바위)
-        }
-    };
-}
 
 class RSP extends Component {
     state = {
