@@ -4,6 +4,22 @@ import React, { useState, useEffect, useRef } from 'react';
 // -> (setState/props 바뀔 때 -> shouldComponentUpdate -> render -> componentDidUpdate)
 // 부모가 나를 없앴을 때 -> componentWillMount -> 소멸
 
+// componentDidMount() {
+//     this.setState({
+//         imgCoord: 3,
+//         score: 1,
+//         result: 2,
+//     })
+// }
+
+// useEffect(() => {
+//     setImgCoord();
+//     setScore();
+// }, [imgCoord, score]);
+// useEffect(() => {
+//     setResult();
+// }, [result]);
+
 const rspCoords = {
     바위: '0',
     가위: '-142px',
@@ -17,7 +33,7 @@ const scores = {
 };
 
 const computerChoice = (imgCoord) => {
-    return Object.entries(rspCoords).find(function (v) {
+    return Object.entries(rspCoords).find((v) => {
         return v[1] === imgCoord;
     })[0];
 };
@@ -28,9 +44,11 @@ const RSP = () => {
     const [score, setScore] = useState(0);
     const interval = useRef();
 
-    useEffect(() => {
+    // 함수 컴포넌트 안에서 작성해야 함, 배열에는 꼭 useEffect를 다시 실행할 값만 넣으세요.
+    useEffect(() => { // componentDidMount, componentDidUpdate 역할 (1 : 1 대응은 아님)
+        console.log('다시 실행');
         interval.current = setInterval(changeHandle, 500);
-        return () => {
+        return () => { // componentWillUnmount 역할
             console.log('종료');
             clearInterval(interval.current);
         }
@@ -46,9 +64,8 @@ const RSP = () => {
         }
     };
 
-    const onClickBtn = (choice) => {
-        const { imgCoord } = this.state;
-        clearInterval(this.interval);
+    const onClickBtn = (choice) => () => {
+        clearInterval(interval.current);
         const myScore = scores[choice];
         const cpuScore = scores[computerChoice(imgCoord)];
         const diff = myScore - cpuScore;
@@ -66,7 +83,7 @@ const RSP = () => {
         }, 2000);
     };
 
-    return(
+    return (
         <>
             <div id="computer" style={{ background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0`}} />
             <div>
